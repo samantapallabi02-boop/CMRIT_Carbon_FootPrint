@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Tracker Results</title>
+    <link rel="stylesheet" href="/static/static.css">
+</head>
+<body>
+    <h1>Carbon Footprint Results</h1>
+    <p><strong>Total Carbon Footprint:</strong> {{ total }} kg CO2</p>
+
+    <h2>Breakdown:</h2>
+    <ul>
+        {% for category, value in breakdown.items() %}
+        <li><strong>{{ category }}:</strong> {{ value }} kg CO2</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/">Go Back</a>
+</body>
+</html>

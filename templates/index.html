@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Tracker</title>
+    <link rel="stylesheet" href="/static/static.css">
+</head>
+<body>
+    <h1>Welcome to the Carbon Tracker</h1>
+    <form action="/calculate" method="POST">
+        <label for="car_km">Car (km):</label>
+        <input type="number" id="car_km" name="car_km" step="any"><br>
+
+        <label for="bus_km">Bus (km):</label>
+        <input type="number" id="bus_km" name="bus_km" step="any"><br>
+
+        <label for="electricity_kwh">Electricity (kWh):</label>
+        <input type="number" id="electricity_kwh" name="electricity_kwh" step="any"><br>
+
+        <label for="veg_meals">Vegetarian Meals:</label>
+        <input type="number" id="veg_meals" name="veg_meals" step="any"><br>
+
+        <label for="veg_meal_choice">Vegetarian Meal Choice:</label>
+        <select id="veg_meal_choice" name="veg_meal_choice">
+            <option value="salad">Salad</option>
+            <option value="pasta">Pasta</option>
+            <option value="tofu">Tofu</option>
+        </select><br>
+
+        <label for="nonveg_meals">Non-Vegetarian Meals:</label>
+        <input type="number" id="nonveg_meals" name="nonveg_meals" step="any"><br>
+
+        <label for="waste_kg">Waste (kg):</label>
+        <input type="number" id="waste_kg" name="waste_kg" step="any"><br>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <a href="/tracker" class="tracker-button">Daily Tracker</a>
+    <a href="/logout" class="logout-button">Logout</a>
+</body>
+</html>

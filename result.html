@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <style>
+        .recommendation-section {
+            margin-top: 20px;
+        }
+        .ph-scale {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 30px;
+        }
+        .ph-bar {
+            height: 100%;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+  <h2>Your footprint: {{ total }} kg CO2e</h2>
+  <ul>
+    {% for k,v in breakdown.items() %}
+      <li>{{ k }}: {{ v }} kg</li>
+    {% endfor %}
+  </ul>
+  <a href="/">Back</a>
+
+  <div class="recommendation-section">
+        <h2>Emission Level</h2>
+        <div class="ph-scale">
+            <div class="ph-bar" id="ph-bar"></div>
+        </div>
+        <p id="recommendation-text"></p>
+    </div>
+
+    <script>
+        const totalEmission = {{ total }}; // Total CO2 emission from the calculation
+        const phBar = document.getElementById('ph-bar');
+        const recommendationText = document.getElementById('recommendation-text');
+
+        // Set the pH scale bar color and recommendation based on emission level
+        if (totalEmission > 100) {
+            phBar.style.backgroundColor = 'red';
+            phBar.style.width = '100%';
+            recommendationText.textContent = 'Your CO2 emission is high. Consider reducing car usage, electricity consumption, and non-vegetarian meals.';
+        } else if (totalEmission > 50) {
+            phBar.style.backgroundColor = 'yellow';
+            phBar.style.width = '50%';
+            recommendationText.textContent = 'Your CO2 emission is moderate. You are doing well, but there is room for improvement.';
+        } else {
+            phBar.style.backgroundColor = 'green';
+            phBar.style.width = '25%';
+            recommendationText.textContent = 'Great job! Your CO2 emission is low. Keep up the good work!';
+        }
+    </script>
+</body>
+</html>

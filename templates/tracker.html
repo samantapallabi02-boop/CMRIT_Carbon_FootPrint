@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Tracker</title>
+    <link rel="stylesheet" href="/static/static.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.1.0"></script>
+</head>
+<body>
+    <h1>Daily Carbon Footprint Tracker</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Your Total Carbon Footprint (kg CO2)</th>
+                <th>All Users' Average Carbon Footprint (kg CO2)</th>
+                <th>Breakdown</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ avg_emission|round(2) }}</td>
+                <td>{{ row[2] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="chart-container">
+        <h2>Carbon Footprint Visualization</h2>
+        <div class="chart-toggle">
+            <button id="barChartBtn">Bar Chart</button>
+            <button id="lineChartBtn">Line Chart</button>
+        </div>
+        <canvas id="carbonChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="summary-section">
+        <h3>Summary</h3>
+        <p><strong>Highest Emission:</strong> <span id="highestEmission"></span> kg CO2</p>
+        <p><strong>Lowest Emission:</strong> <span id="lowestEmission"></span> kg CO2</p>
+        <p><strong>Average Emission:</strong> <span id="averageEmission"></span> kg CO2</p>
+    </div>
+
+    <div class="recommendation-section">
+        <h2>Recommendations</h2>
+        <p>Based on your carbon footprint data, here are some suggestions to reduce your emissions:</p>
+        <ul>
+            <li><strong>Transportation:</strong> Consider carpooling, using public transport, or cycling to reduce emissions from vehicles.</li>
+            <li><strong>Electricity:</strong> Switch to energy-efficient appliances and consider renewable energy sources.</li>
+            <li><strong>Food:</strong> Reduce the consumption of non-vegetarian meals and opt for plant-based options.</li>
+            <li><strong>Waste:</strong> Recycle and compost to minimize waste-related emissions.</li>
+        </ul>
+
+        <h3>Contribution by Category</h3>
+        <canvas id="recommendationChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="activity-list">
+        <h2>Activity Emission Breakdown</h2>
+        <ul id="activityBreakdown">
+            <!-- Dynamic content will be added here -->
+        </ul>
+    </div>
+
+    <script>
+        const labels = [
+            {% for row in rows %}"{{ row[0] }}", {% endfor %}
+        ];
+        const data = [
+            {% for row in rows %}{{ row[1] }}, {% endfor %}
+        ];
+        const avgEmission = {{ avg_emission|round(2) }};
+
+        const ctx = document.getElementById('carbonChart').getContext('2d');
+        let chartType = 'bar';
+
+        const createChart = (type) => {
+            return new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Your Daily Carbon Footprint (kg CO2)',
+                            data: data,
+                            backgroundColor: data.map(value => {
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                                gradient.addColorStop(0, 'rgba(75, 192, 192, 0.8)');
+                                gradient.addColorStop(1, 'rgba(75, 192, 192, 0.2)');
+                                return gradient;
+                            }),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: "All Users' Average Carbon Footprint (kg CO2)",
+                            data: Array(labels.length).fill(avgEmission),
+                            backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Carbon Footprint (kg CO2)'
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        let chart = createChart(chartType);
+
+        document.getElementById('barChartBtn').addEventListener('click', () => {
+            chart.destroy();
+            chart = createChart('bar');
+        });
+
+        document.getElementById('lineChartBtn').addEventListener('click', () => {
+            chart.destroy();
+            chart = createChart('line');
+        });
+
+        // Calculate and display summary
+        const highestEmission = Math.max(...data);
+        const lowestEmission = Math.min(...data);
+        const averageEmission = (data.reduce((a, b) => a + b, 0) / data.length).toFixed(2);
+
+        document.getElementById('highestEmission').textContent = highestEmission;
+        document.getElementById('lowestEmission').textContent = lowestEmission;
+        document.getElementById('averageEmission').textContent = averageEmission;
+
+        const breakdownData = {
+            {% for row in rows %}
+            {% set breakdown = row[2] | safe %}
+            {% endfor %}
+        };
+
+        const categories = Object.keys(breakdownData);
+        const values = Object.values(breakdownData);
+
+        // Generate recommendations dynamically
+        const recommendationList = document.getElementById('recommendation-list');
+        categories.forEach((category, index) => {
+            const li = document.createElement('li');
+            li.textContent = `Reduce emissions from ${category} by considering alternative options.`;
+            recommendationList.appendChild(li);
+        });
+
+        // Create a pie chart for category contributions
+        const ctx2 = document.getElementById('recommendationChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: categories,
+                datasets: [{
+                    data: values,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                return `${label}: ${value} kg CO2`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const animateChart = (chart) => {
+            const animationDuration = 1500; // 1.5 seconds
+            chart.options.animation = {
+                duration: animationDuration,
+                easing: 'easeInOutBounce',
+                onProgress: (animation) => {
+                    const progress = animation.currentStep / animation.numSteps;
+                    console.log(`Animation progress: ${(progress * 100).toFixed(2)}%`);
+                },
+                onComplete: () => {
+                    console.log('Animation complete!');
+                }
+            };
+            chart.update();
+        };
+
+        // Apply enhanced animations to the chart
+        animateChart(chart);
+
+        // Example breakdown data (replace with dynamic data from the server)
+        const activityData = {
+            "Food": 12.5,
+            "Transportation": 25.3,
+            "Electricity": 18.7,
+            "Waste": 8.2
+        };
+
+        const activityList = document.getElementById('activityBreakdown');
+
+        Object.entries(activityData).forEach(([activity, emission]) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${activity}: ${emission} kg CO2`;
+            activityList.appendChild(listItem);
+        });
+    </script>
+    <a href="/">Go Back</a>
+</body>
+</html>

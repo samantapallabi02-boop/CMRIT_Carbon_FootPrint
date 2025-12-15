@@ -1,0 +1,184 @@
+body { font-family: Arial, sans-serif; background: #f0f4f8; color: #333; }
+h1 { color: #2c7a7b; }
+form { margin: 20px; }
+label { display: block; margin: 10px 0; }
+button { background: #2c7a7b; color: white; padding: 8px 12px; border: none; border-radius: 4px; }
+input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
+}
+
+button:hover {
+    background: #285e61;
+    cursor: pointer;
+}
+
+a {
+    color: #2c7a7b;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ff6b6b;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
+}
+
+.logout-button:hover {
+    background: #e63946;
+    cursor: pointer;
+}
+
+.tracker-button {
+    position: absolute;
+    top: 20px;
+    right: 120px;
+    background: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
+}
+
+.tracker-button:hover {
+    background: #388e3c;
+    cursor: pointer;
+}
+
+#carbonChart {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 30px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.chart-toggle {
+    margin-bottom: 15px;
+}
+
+.chart-toggle button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background 0.3s ease;
+}
+
+.chart-toggle button:hover {
+    background: #388e3c;
+}
+
+.recommendation-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.recommendation-section h2 {
+    color: #2c7a7b;
+    margin-bottom: 15px;
+}
+
+.recommendation-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.recommendation-section ul li {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.ph-scale {
+    width: 100%;
+    height: 20px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.ph-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.5s ease;
+}
+
+#recommendation-text {
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.summary-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.summary-section h3 {
+    color: #2c7a7b;
+    margin-bottom: 15px;
+}
+
+.summary-section p {
+    margin: 5px 0;
+    color: #333;
+}

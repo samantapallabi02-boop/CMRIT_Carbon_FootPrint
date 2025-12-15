@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carbon Footprint Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Carbon Footprint Tracker</h1>
+  <form action="/calculate" method="post">
+    <label>Car travel (km): <input type="number" name="car_km"></label><br>
+    <label>Bus travel (km): <input type="number" name="bus_km"></label><br>
+    <label>Electricity (kWh): <input type="number" name="electricity_kwh"></label><br>
+    <label>Veg meals: <input type="number" name="veg_meals"></label><br>
+    <label>Non-veg meals: <input type="number" name="nonveg_meals"></label><br>
+    <label>Waste generated per week (kg): <input type="number" name="waste_kg"></label><br>
+    <button type="submit">Calculate</button>
+  </form>
+
+  <div class="activity-list">
+    <h2>Activity Emission Breakdown</h2>
+    <ul id="activityBreakdown">
+      <!-- Dynamic content will be added here -->
+    </ul>
+  </div>
+
+  <div class="activity-selector">
+    <button id="addActivityBtn">+</button>
+    <div id="activityMenu" style="display: none;">
+      <h3>Select an Activity</h3>
+      <ul>
+        <li><button class="activity-option" data-emission="12.5">Food</button></li>
+        <li><button class="activity-option" data-emission="25.3">Transportation</button></li>
+        <li><button class="activity-option" data-emission="18.7">Electricity</button></li>
+        <li><button class="activity-option" data-emission="8.2">Waste</button></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Example breakdown data (replace with dynamic data from the server)
+    const activityData = {
+      "Food": 12.5,
+      "Transportation": 25.3,
+      "Electricity": 18.7,
+      "Waste": 8.2
+    };
+
+    const activityList = document.getElementById('activityBreakdown');
+
+    Object.entries(activityData).forEach(([activity, emission]) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${activity}: ${emission} kg CO2`;
+      activityList.appendChild(listItem);
+    });
+
+    const addActivityBtn = document.getElementById('addActivityBtn');
+    const activityMenu = document.getElementById('activityMenu');
+    const activityOptions = document.querySelectorAll('.activity-option');
+
+    let dailyTotal = 0;
+
+    const updateDailyTotal = (emission) => {
+      const today = new Date().toISOString().split('T')[0];
+      let dailyData = JSON.parse(localStorage.getItem('dailyData')) || {};
+
+      if (!dailyData[today]) {
+        dailyData[today] = 0;
+      }
+
+      dailyData[today] += emission;
+      localStorage.setItem('dailyData', JSON.stringify(dailyData));
+
+      alert(`Daily Total Updated: ${dailyData[today].toFixed(2)} kg CO2`);
+    };
+
+    addActivityBtn.addEventListener('click', () => {
+      activityMenu.style.display = activityMenu.style.display === 'none' ? 'block' : 'none';
+    });
+
+    activityOptions.forEach(option => {
+      option.addEventListener('click', (event) => {
+        const emission = parseFloat(event.target.getAttribute('data-emission'));
+        updateDailyTotal(emission);
+        activityMenu.style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>
